@@ -13,10 +13,13 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
@@ -24,7 +27,7 @@ import javax.swing.table.TableRowSorter;
 public class DevicesVisual 
 {
     // titulos
-    private final static String nombresDeColumna[] = { "MAC Device", "Description", "Ip Address", "Total Cans Collected"};
+    //private final static String nombresDeColumna[] = { "MAC Device", "Description", "Ip Address", "Total Cans Collected"};
     
     JFrame frame = new JFrame("Devices");
     
@@ -36,23 +39,32 @@ public class DevicesVisual
     JTextField textMAC = new  JTextField(10);
     
     JLabel labelDescription = new JLabel("Description of device:");
-    JTextField textDescription = new JTextField(10);
+    JTextField textDescription = new JTextField(20);
     
     JLabel labelIpAddress = new JLabel("Ip Address of device:");
     JTextField textIpAddress = new JTextField(10);
 
     JPanel panelButtons = new JPanel();
     JButton buttonOk = new JButton("Ok");
+    JButton buttonNew = new JButton("Nuevo");
     JButton buttonCancel  = new JButton("Cancel");
     
     //JComboBox devicesList/* = new JComboBox()*/;
     
-    JTable table = new JTable();
-    DefaultTableModel modelo = new DefaultTableModel(nombresDeColumna, 0);
+    JTable table/* = new JTable()*/;
+    DefaultTableModel modelo = new DefaultTableModel();
     JScrollPane scrollPane;
 
     public DevicesVisual() 
     {
+        JTable table = new JTable(modelo);
+        
+        
+        modelo.addColumn("Mac Address");
+        modelo.addColumn("Descripcion");
+        modelo.addColumn("Ip Address");
+        modelo.addColumn("Total cans collected");
+
         ArrayList<Device> devices = Device.getAll();
         
         //modelo = new DefaultTableModel(null, nombresDeColumna); 
@@ -69,8 +81,7 @@ public class DevicesVisual
             modelo.addRow(fila);
         }
         
-        // creamos la Table basados en el modelo de datos que hemos creado
-        JTable table = new JTable(modelo);
+        table.setModel(modelo);
 
         // ordenacion de filas (por defecto, al ser tipos primitivos)
         TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(modelo);
@@ -95,7 +106,8 @@ public class DevicesVisual
         c.gridy = 2; c.gridx = 0; panelControls.add(labelIpAddress , c) ;
         c.gridy = 2; c.gridx = 1; panelControls.add(textIpAddress , c) ;
         c.gridy = 3; c.gridx = 0; panelControls.add(buttonOk , c) ;
-        c.gridy = 3; c.gridx = 1; panelControls.add(buttonCancel , c) ;
+        c.gridy = 3; c.gridx = 1; panelControls.add(buttonNew , c) ;
+        c.gridy = 3; c.gridx = 2; panelControls.add(buttonCancel , c) ;
 
         //ADD THE PANLE TO THE CONTAINER
         container.add(panelControls, BorderLayout.NORTH);
@@ -104,14 +116,66 @@ public class DevicesVisual
         
         //c.gridy = 3; c.gridx = 0; panelControls.add(buttonOk , c) ;
         
-        table.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent evt) 
-            {
-                JTableMouseClicked(evt);
+       // table.addMouseListener(new java.awt.event.MouseAdapter() {
+         //   @Override
+           // public void mouseClicked(java.awt.event.MouseEvent evt) 
+            //{
+               // JTableMouseClicked(evt);
+            //}
+        //});
+        
+        table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+        public void valueChanged(ListSelectionEvent event) {
+            // do some actions here, for example
+            // print first column value from selected row
+            textMAC.setEnabled(false);
+            textMAC.setText((String) table.getValueAt(table.getSelectedRow(), 0));
+            textDescription.setText((String) table.getValueAt(table.getSelectedRow(), 1));
+            textIpAddress.setText((String) table.getValueAt(table.getSelectedRow(), 2));
+            
+            System.out.println(table.getValueAt(table.getSelectedRow(), 0).toString());
             }
         });
         
+        buttonNew.addActionListener(new java.awt.event.ActionListener() 
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt) 
+            {
+                textMAC.setEnabled(true);
+                textMAC.setText("");
+                textDescription.setText("");
+                textIpAddress.setText("");
+            }
+        });
+        
+        buttonOk.addActionListener(new java.awt.event.ActionListener() 
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt) 
+            {
+                
+                String mac = textMAC.getText();
+                String des = textDescription.getText();
+                String ip = textIpAddress.getText();
+                if(!mac.equals("") || !des.equals("") || !ip.equals(""))
+                {
+                    Device d = new Device();
+                    d.setId(mac);
+                    d.setDescription(des);
+                    d.setIpAddress(ip);
+                    d.add();
+                    ArrayList<Device> devices = Device.getAll();
+                    fillTable(devices);
+                    JOptionPane.showMessageDialog(frame, "Se ha añadido exitosamente el dispositivo");
+                    textMAC.setText("");
+                    textDescription.setText("");
+                    textIpAddress.setText("");
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(frame, "Falta llenar algun campo");
+                }
+            }
+        });
         
         buttonCancel.addActionListener(new java.awt.event.ActionListener() 
         {
@@ -120,6 +184,7 @@ public class DevicesVisual
                 //close();
             }
         });
+        
         
         //buttonOk.addActionListener(new java.awt.event.ActionListener() 
         //{

@@ -143,7 +143,8 @@ public class ContainerCans
         //query
         String query = "SELECT d.idMac, d.description, d.ipAddress, d.totalLifeCans, c.idContainer, c.date, c.time, c.quantity\n" +
                         "FROM devices as d\n" +
-                        "INNER JOIN container as c ON c.idMac = d.idMac";
+                        "INNER JOIN container as c ON c.idMac = d.idMac\n"+
+                        "ORDER BY c.idContainer desc";
         try
         {
             //prepare statement
@@ -242,7 +243,8 @@ public class ContainerCans
         String query = "SELECT d.idMac, d.description, d.ipAddress, d.totalLifeCans, c.idContainer, c.date, c.time, c.quantity\n" +
                         "FROM devices as d\n" +
                         "INNER JOIN container as c ON c.idMac = d.idMac\n" +
-                        "WHERE date BETWEEN ? AND ?";
+                        "WHERE date BETWEEN ? AND ?\n"+
+                        "ORDER BY c.idContainer desc";
         try
         {
             //prepare statement
@@ -298,7 +300,8 @@ public class ContainerCans
         String query = "SELECT d.idMac, d.description, d.ipAddress, d.totalLifeCans, c.idContainer, c.date, c.time, c.quantity\n" +
                         "FROM devices as d\n" +
                         "INNER JOIN container as c ON c.idMac = d.idMac\n" +
-                        "WHERE d.idMac = ? AND c.date BETWEEN ? AND ?";
+                        "WHERE d.idMac = ? AND c.date BETWEEN ? AND ?\n" +
+                        "ORDER BY c.idContainer desc";
         try
         {
             //prepare statement

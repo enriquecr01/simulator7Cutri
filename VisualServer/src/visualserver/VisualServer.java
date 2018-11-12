@@ -12,6 +12,6 @@ public class VisualServer
             //DuckFoodVisual dfv = new DuckFoodVisual();
             MenuVisual mv = new MenuVisual();
             
-            DevicesVisual dv = new DevicesVisual();
+            //DevicesVisual dv = new DevicesVisual();
         }    
 }

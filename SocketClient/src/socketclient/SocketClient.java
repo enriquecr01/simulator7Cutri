@@ -22,22 +22,24 @@ public class SocketClient
         InputStreamReader isr;
         BufferedReader br;
         Random r = new Random(); //random number generator
+        Calendar now = Calendar.getInstance();
         ////////////////////////////////////////////////
-        int dispensador = 10000;
+        int dispensador = 0;
+        int dispensadorDog = 10000;        
+        int dispensadorDuck = 10000;
         int dispensar = 0;
         String message = ""; // outgoing message
         String response = ""; // incoming response from server
         String stationId = "00:17:4F:08:5F:69"; // station id
-        //String formattedUnixDate = ""; // formated timestamp
-              
-        
+        //String formattedUnixDate = ""; // formated timestamp             
         try
         {
             // send dates
             do{
                 Date date = Calendar.getInstance().getTime();  
+                String[] strDays = new String[]{"Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sabado"};
                 DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");  
-                DateFormat hourFormat = new SimpleDateFormat("kk:mm");  
+                DateFormat hourFormat = new SimpleDateFormat("kk:mm");
                 String strDate = dateFormat.format(date); 
                 String strHour = hourFormat.format(date);
                 char date1 = strHour.charAt(0);                
@@ -50,6 +52,14 @@ public class SocketClient
                 {
                     System.out.println("Esta Abierto");
                     int latas = 4 + r.nextInt(4);
+                    int disp = 1 + r.nextInt(2);
+                    System.out.println("Dispensador es: " + disp);
+                    if (disp == 1){
+                        dispensador = dispensadorDog;
+                    }
+                    else{
+                        dispensador = dispensadorDuck;
+                    }
                     System.out.println(strHour);                    
                     System.out.println("latas son: " + latas);
                     switch(latas){
@@ -105,6 +115,12 @@ public class SocketClient
                                 break;
                             }
                     }
+                    if (disp == 1){
+                        dispensadorDog = dispensador;
+                    }
+                    else{
+                        dispensadorDuck = dispensador;
+                    }
                     System.out.println("El numero de latas es: " + latas);
                     System.out.println("Dispensando... " + dispensar + " gramos");                    
                     System.out.println("Dispensador cuenta con: " + dispensador);
@@ -121,7 +137,7 @@ public class SocketClient
                                 " \"ti\"  : \"" + strHour +"\"," + 
                                 " \"cans\" : \"" + latas +"\"," +
                                 " \"val\" : \"" + dispensador +"\"," +
-                                " \"dod\" : \"" + 1 +"\"" +
+                                " \"dod\" : \"" + disp +"\"" +
                           "}";
                     ps.println(message); 
                     response = br.readLine();
@@ -130,7 +146,11 @@ public class SocketClient
                     s.close();//close socket
                     try {
                       //Thread.sleep(latas * 60 * 1000); 
-                      Thread.sleep(1000); 
+                      System.out.println("Hoy es : " + strDays[now.get(Calendar.DAY_OF_WEEK) - 1]);
+                      if(strDays[now.get(Calendar.DAY_OF_WEEK) - 1].equals("Sabado") || strDays[now.get(Calendar.DAY_OF_WEEK) - 1].equals("Domingo"))
+                        Thread.sleep((latas * 60 * 1000)/2); 
+                      else
+                          Thread.sleep((latas * 60 * 1000)); 
                         //el tiempo que tardara en que vuelvan a hecharle latas, va ser igual al numero de latas en minutos
                     } catch(InterruptedException e) {
                       System.out.println(e.getMessage());
@@ -149,7 +169,7 @@ public class SocketClient
                                         " \"ti\"  : \"" + strHour +"\"," + 
                                         " \"cans\" : \"" + 0 +"\"," +
                                         " \"val\" : \"" + 0 +"\"," +
-                                        " \"dod\" : \"" + 1 +"\"" +
+                                        " \"dod\" : \"" + disp +"\"" +
                                   "}";
                             ps.println(message); 
                             response = br.readLine();
@@ -178,5 +198,18 @@ public class SocketClient
             System.out.println(ex.getMessage());
         }
     }
+    /*
+    int dispensadorDog = 10000;
+    int dispensadorDuck = 10000;
+    
+    public static void Dispensar(int dispensador, int dispensar){
+        if(dispensador >= dispensar)
+        {                                
+            dispensador = dispensador - dispensar;
+        }
+        else{
+            System.out.println("Dispensador solo cuenta con: " + dispensador + " gramos");
+        }
+    }*/
     
 }

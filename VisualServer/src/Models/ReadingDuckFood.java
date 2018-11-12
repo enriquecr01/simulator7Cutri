@@ -138,7 +138,8 @@ public class ReadingDuckFood
         //query
         String query = "SELECT d.idMac, d.description, d.ipAddress, d.totalLifeCans, dfh.idHistoryDuck, dfh.date, dfh.time, dfh.weight\n" +
                         "FROM devices as d\n" +
-                        "INNER JOIN duckfoodhistory as dfh ON dfh.idMac = d.idMac";
+                        "INNER JOIN duckfoodhistory as dfh ON dfh.idMac = d.idMac\n"+
+                        "ORDER BY dfh.idHistoryDuck desc";
         try
         {
             //prepare statement
@@ -238,7 +239,8 @@ public class ReadingDuckFood
         String query = "SELECT d.idMac, d.description, d.ipAddress, d.totalLifeCans, dfh.idHistoryDuck, dfh.date, dfh.time, dfh.weight\n" +
                         "FROM devices as d\n" +
                         "INNER JOIN duckfoodhistory as dfh ON dfh.idMac = d.idMac" +
-                        "WHERE dfh.date BETWEEN ? AND ?";
+                        "WHERE dfh.date BETWEEN ? AND ?\n"+
+                        "ORDER BY dfh.idHistoryDuck desc";;
         try
         {
             //prepare statement
@@ -294,7 +296,8 @@ public class ReadingDuckFood
         String query = "SELECT d.idMac, d.description, d.ipAddress, d.totalLifeCans, dfh.idHistoryDuck, dfh.date, dfh.time, dfh.weight\n" +
                         "FROM devices as d\n" +
                         "INNER JOIN duckfoodhistory as dfh ON dfh.idMac = d.idMac" +
-                        "WHERE d.idMac = ? AND dfh.date BETWEEN ? AND ?";
+                        "WHERE d.idMac = ? AND dfh.date BETWEEN ? AND ?\n"+
+                        "ORDER BY dfh.idHistoryDuck desc";
         try
         {
             //prepare statement

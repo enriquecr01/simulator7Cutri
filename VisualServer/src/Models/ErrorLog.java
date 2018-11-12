@@ -95,7 +95,8 @@ public class ErrorLog
         //connection
         Connection connection = MySqlConnection.getConnection();
         //query
-        String query = "SELECT idError, date, errorCode, message FROM errorlog";
+        String query = "SELECT idError, date, errorCode, message FROM errorlog\n" +
+                    "ORDER BY idError desc";
         try
         {
             //prepare statement

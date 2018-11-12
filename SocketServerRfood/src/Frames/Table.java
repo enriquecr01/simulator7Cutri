@@ -10,7 +10,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class Table 
 {
-    String nombresDeColumna[] = { "MAC Device", "Date", "Hour", "Cans Inserted", "Weight", "Type of food" };
+    String nombresDeColumna[] = { "MAC Device", "Date", "Hour", "Cans Inserted", "Weight", "Type of food", "Message" };
         
     JFrame frame = new JFrame("Container History");
     

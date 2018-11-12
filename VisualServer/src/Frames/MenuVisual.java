@@ -12,11 +12,12 @@ import javax.swing.JPanel;
 
 public class MenuVisual 
 {
-    JFrame frame = new JFrame("Duck Food History");
+    JFrame frame = new JFrame("Menu");
     JButton buttonLog = new JButton("Error Log");
     JButton buttonContainer = new JButton("Container");
     JButton buttonDuck = new JButton("Duck Food");
     JButton buttonDog = new JButton("Dog Food");
+    JButton buttonDevice = new JButton("Device");
     JButton buttonExit = new JButton("Exit");
     JLabel labelCatalog = new JLabel("Select your catalog");
     JPanel panelTitle = new JPanel();
@@ -40,6 +41,7 @@ public class MenuVisual
         c.gridy = 1; c.gridx = 2; panelButtons.add(buttonDuck , c) ;
         c.gridy = 1; c.gridx = 2; panelButtons.add(buttonDog , c) ;
         c.gridy = 2; c.gridx = 0; panelButtons.add(buttonExit , c) ;
+        c.gridy = 1; c.gridx = 3; panelButtons.add(buttonDevice , c) ;
 
         //ADD THE PANLE TO THE CONTAINER
         container.add(panelButtons, BorderLayout.CENTER);
@@ -62,6 +64,11 @@ public class MenuVisual
         buttonDog.addActionListener(new java.awt.event.ActionListener() 
         {
             public void actionPerformed(java.awt.event.ActionEvent evt) { DogFoodVisual dfv = new DogFoodVisual(); dfv.show(); }
+        });
+        
+        buttonDevice.addActionListener(new java.awt.event.ActionListener() 
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt) { DevicesVisual dv = new DevicesVisual(); /*dv.show();*/ }
         });
                 
         buttonExit.addActionListener(new java.awt.event.ActionListener() 

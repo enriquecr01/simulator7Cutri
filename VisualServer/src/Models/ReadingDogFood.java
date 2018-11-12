@@ -130,7 +130,8 @@ public class ReadingDogFood
         //query
         String query = "SELECT d.idMac, d.description, d.ipAddress, d.totalLifeCans, dfh.idHistoryDog, dfh.date, dfh.time, dfh.weight\n" +
                         "FROM devices as d\n" +
-                        "INNER JOIN dogfoodhistory as dfh ON dfh.idMac = d.idMac";
+                        "INNER JOIN dogfoodhistory as dfh ON dfh.idMac = d.idMac\n"+
+                        "ORDER BY dfh.idHistoryDog desc";
         try
         {
             //prepare statement
@@ -180,7 +181,7 @@ public class ReadingDogFood
                         "FROM devices as d\n" +
                         "INNER JOIN dogfoodhistory as dfh ON dfh.idMac = d.idMac" +
                         "WHERE d.idMac = ?\n" +
-                        "ORDER BY dfh.idContainer desc";
+                        "ORDER BY dfh.idHistoryDog desc";
         try
         {
             //prepare statement
@@ -230,7 +231,8 @@ public class ReadingDogFood
         String query = "SELECT d.idMac, d.description, d.ipAddress, d.totalLifeCans, dfh.idHistoryDog, dfh.date, dfh.time, dfh.weight\n" +
                         "FROM devices as d\n" +
                         "INNER JOIN dogfoodhistory as dfh ON dfh.idMac = d.idMac" +
-                        "WHERE dfh.date BETWEEN ? AND ?";
+                        "WHERE dfh.date BETWEEN ? AND ?\n"+
+                        "ORDER BY dfh.idHistoryDog desc";
         try
         {
             //prepare statement
@@ -286,7 +288,8 @@ public class ReadingDogFood
         String query = "SELECT d.idMac, d.description, d.ipAddress, d.totalLifeCans, dfh.idHistoryDog, dfh.date, dfh.time, dfh.weight\n" +
                         "FROM devices as d\n" +
                         "INNER JOIN dogfoodhistory as dfh ON dfh.idMac = d.idMac" +
-                        "WHERE d.idMac = ? AND dfh.date BETWEEN ? AND ?";
+                        "WHERE d.idMac = ? AND dfh.date BETWEEN ? AND ?\n"+
+                        "ORDER BY dfh.idHistoryDog desc";
         try
         {
             //prepare statement

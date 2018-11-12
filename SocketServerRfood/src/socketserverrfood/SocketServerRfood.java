@@ -37,6 +37,7 @@ public class SocketServerRfood
     { 
         Table t = new Table();
         t.show();
+        String idMac = "";
         //try
         //{
             //Device d = new Device("00:17:4F:08:5F:69");
@@ -119,13 +120,13 @@ public class SocketServerRfood
                     try
                     {
                         JSONObject JSONdata = new JSONObject(data);
-                        String id = JSONdata.getString("id"); System.out.println(id);
+                        idMac = JSONdata.getString("id"); System.out.println(idMac);
                         String date = JSONdata.getString("da");
                         String time = JSONdata.getString("ti");
                         double value = JSONdata.getDouble("val");
                         int cans = JSONdata.getInt("cans");
                         int dod = JSONdata.getInt("dod");
-                        Device d = new Device(id);
+                        Device d = new Device(idMac);
                         Container c = new Container(date, d, cans, time);
                         int quantity = 0;
                         int lastCant = 0;
@@ -163,14 +164,15 @@ public class SocketServerRfood
                             dogOrDuck = "Dog Food";
                         }
                         
-                        String[] row = new String[6];
+                        String[] row = new String[7];
 
-                        row[0] = id;
+                        row[0] = idMac;
                         row[1] = date;
                         row[2] = time;
-                        row[3] = Double.toString(value);
-                        row[4] = Integer.toString(cans);
+                        row[3] = Integer.toString(cans);
+                        row[4] = Double.toString(value);
                         row[5] = dogOrDuck;
+                        row[6] = "Ok";
                         
                         t.add(row);
                         
@@ -181,24 +183,56 @@ public class SocketServerRfood
                     }
                     catch (ValueOutOfRange e)
                     {
+                        String[] row = new String[7];
+
+                        row[0] = idMac;
+                        row[1] = "N/A";
+                        row[2] = "N/A";
+                        row[3] = "N/A";
+                        row[4] = "N/A";
+                        row[5] = "N/A";
+                        row[6] = e.getMessage() + "from " + idMac;
+                        
                         Date date = Calendar.getInstance().getTime();  
-                        ErrorLog el = new ErrorLog(date, 1, e.getMessage());
+                        ErrorLog el = new ErrorLog(date, 1, (e.getMessage() + "from " + idMac));
                         el.add();
                         status = 4;
                         response = e.getMessage();
                     }
                     catch (RecordNotFoundException e)
                     {
+                        String[] row = new String[7];
+
+                        row[0] = idMac;
+                        row[1] = "N/A";
+                        row[2] = "N/A";
+                        row[3] = "N/A";
+                        row[4] = "N/A";
+                        row[5] = "N/A";
+                        row[6] = e.getMessage() + "from " + idMac;
+                        
                         Date date = Calendar.getInstance().getTime();  
-                        ErrorLog el = new ErrorLog(date, 2, e.getMessage());
+                        ErrorLog el = new ErrorLog(date, 2, (e.getMessage() + "from " + idMac));
                         el.add();
                         status = 3;
                         response = e.getMessage();
                     }
                     catch (JSONException e)
                     {
+                        String[] row = new String[7];
+
+                        row[0] = idMac;
+                        row[1] = "N/A";
+                        row[2] = "N/A";
+                        row[3] = "N/A";
+                        row[4] = "N/A";
+                        row[5] = "N/A";
+                        row[6] = e.getMessage() + "from " + idMac;
+                        
+                        t.add(row);
+                        
                         Date date = Calendar.getInstance().getTime();  
-                        ErrorLog el = new ErrorLog(date, 0, e.getMessage());
+                        ErrorLog el = new ErrorLog(date, 0, (e.getMessage() + "from " + idMac));
                         el.add();
                         status = 2;
                         response = "Invalid JSON format";
