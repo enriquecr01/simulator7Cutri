@@ -25,6 +25,8 @@ public class SocketClient
         Calendar now = Calendar.getInstance();
         ////////////////////////////////////////////////
         int dispensador = 0;
+        int latasAnt = 0;
+        int dispAnt = 0;
         int dispensadorDog = 10000;        
         int dispensadorDuck = 10000;
         int dispensar = 0;
@@ -36,10 +38,11 @@ public class SocketClient
         {
             // send dates
             do{
-                Date date = Calendar.getInstance().getTime();  
+                Date date = Calendar.getInstance().getTime();                  
                 String[] strDays = new String[]{"Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sabado"};
-                DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");  
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  
                 DateFormat hourFormat = new SimpleDateFormat("kk:mm");
+                System.out.println("Fecha: "+dateFormat.format(date));
                 String strDate = dateFormat.format(date); 
                 String strHour = hourFormat.format(date);
                 char date1 = strHour.charAt(0);                
@@ -48,7 +51,8 @@ public class SocketClient
                 char date4 = strHour.charAt(4);
                 String horaS = date1 + "" + date2 + "." + date3 + date4;
                 double horaD = Double.parseDouble(horaS);
-                if(horaD >= 10.00 && horaD <= 23.30)
+                System.out.println(horaD);
+                if(horaD >= 10.00 && horaD <= 20.00)
                 {
                     System.out.println("Esta Abierto");
                     int latas = 4 + r.nextInt(4);
@@ -136,9 +140,12 @@ public class SocketClient
                                 " \"da\"  : \"" + strDate +"\"," + 
                                 " \"ti\"  : \"" + strHour +"\"," + 
                                 " \"cans\" : \"" + latas +"\"," +
-                                " \"val\" : \"" + dispensador +"\"," +
+                                " \"aCans\" : \"" + latasAnt +"\"," +
+                                " \"val\" : \"" + dispensar +"\"," +                            
+                                " \"aVal\" : \"" + dispensador +"\"," +
                                 " \"dod\" : \"" + disp +"\"" +
                           "}";
+                    
                     ps.println(message); 
                     response = br.readLine();
                     System.out.println(response);                    
@@ -150,7 +157,8 @@ public class SocketClient
                       if(strDays[now.get(Calendar.DAY_OF_WEEK) - 1].equals("Sabado") || strDays[now.get(Calendar.DAY_OF_WEEK) - 1].equals("Domingo"))
                         Thread.sleep((latas * 60 * 1000)/2); 
                       else
-                          Thread.sleep((latas * 60 * 1000)); 
+                          //Thread.sleep((latas * 60 * 1000));
+                          Thread.sleep((10000)); 
                         //el tiempo que tardara en que vuelvan a hecharle latas, va ser igual al numero de latas en minutos
                     } catch(InterruptedException e) {
                       System.out.println(e.getMessage());
@@ -167,8 +175,10 @@ public class SocketClient
                                         " \"id\"  : \"" + stationId +"\"," +
                                         " \"da\"  : \"" + strDate +"\"," + 
                                         " \"ti\"  : \"" + strHour +"\"," + 
-                                        " \"cans\" : \"" + 0 +"\"," +
+                                        " \"cans\" : \"" + 0 +"\"," + 
+                                        " \"aCans\" : \"" + 0 +"\"," +
                                         " \"val\" : \"" + 0 +"\"," +
+                                        " \"aVal\" : \"" + 0 +"\"," +
                                         " \"dod\" : \"" + disp +"\"" +
                                   "}";
                             ps.println(message); 
@@ -180,6 +190,8 @@ public class SocketClient
                           System.out.println(e.getMessage());
                         }
                     }
+                    latasAnt = latas;
+                    dispAnt = dispensador;
                         
                 }
               

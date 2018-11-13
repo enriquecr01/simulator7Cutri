@@ -2,7 +2,7 @@ package socketserverrfood;
 
 import Exception.ValueOutOfRange;
 import Frames.Table;
-import Models.Container;
+import Models.ContainerCans;
 import Models.ReadingDogFood;
 import Models.Device;
 import Models.ReadingDuckFood;
@@ -120,59 +120,63 @@ public class SocketServerRfood
                     try
                     {
                         JSONObject JSONdata = new JSONObject(data);
-                        idMac = JSONdata.getString("id"); System.out.println(idMac);
+                        idMac = JSONdata.getString("id");
                         String date = JSONdata.getString("da");
                         String time = JSONdata.getString("ti");
                         double value = JSONdata.getDouble("val");
+                        double aValue = JSONdata.getDouble("aVal");
                         int cans = JSONdata.getInt("cans");
+                        int aCans = JSONdata.getInt("aCans");
                         int dod = JSONdata.getInt("dod");
                         Device d = new Device(idMac);
-                        Container c = new Container(date, d, cans, time);
+                        ContainerCans c = new ContainerCans(date, d, cans, time, aCans);
                         int quantity = 0;
                         int lastCant = 0;
                         String dogOrDuck = "Filling Both";
                         if(cans == 0 && value == 0)
                         {
-                           ReadingDogFood rdog = new ReadingDogFood(date, d, value, time);
+                           ReadingDogFood rdog = new ReadingDogFood(date, d, aValue, time, value);
                            rdog.add();
-                           ReadingDuckFood rduck = new ReadingDuckFood(date, d, value, time);
+                           ReadingDuckFood rduck = new ReadingDuckFood(date, d, aValue, time, value);
                            rduck.add();  
-                           c.add(0);
+                           c.add(0, 0);
                            
                            dogOrDuck = "Filling Both";
                         }
                         else if(dod == 1)
                         {
-                            ReadingDuckFood r = new ReadingDuckFood(date, d, value, time);
+                            ReadingDuckFood r = new ReadingDuckFood(date, d, aValue, time, value);
                             r.add();
                             
                             quantity = c.getLastTotalCans();
                             lastCant = quantity + cans;
-                            c.add(lastCant);
+                            System.out.println("Last cant " + lastCant + ", quantity " + quantity);
+                            c.add(cans, lastCant);
                             
                             dogOrDuck = "Duck Food";
                         }
                         else if (dod == 2)
                         {
-                            ReadingDogFood r = new ReadingDogFood(date, d, value, time);
+                            ReadingDogFood r = new ReadingDogFood(date, d, aValue, time, value);
                             r.add();
-                            
                             quantity = c.getLastTotalCans();
                             lastCant = quantity + cans;
-                            c.add(lastCant);
+                            System.out.println("Last cant " + lastCant + ", quantity " + quantity);
+                            c.add(cans, lastCant);
                             
                             dogOrDuck = "Dog Food";
                         }
                         
-                        String[] row = new String[7];
+                        String[] row = new String[8];
 
                         row[0] = idMac;
                         row[1] = date;
                         row[2] = time;
                         row[3] = Integer.toString(cans);
-                        row[4] = Double.toString(value);
+                        row[4] = Double.toString(aValue);                        
                         row[5] = dogOrDuck;
-                        row[6] = "Ok";
+                        row[6] = Double.toString(value);
+                        row[7] = "Ok";
                         
                         t.add(row);
                         
@@ -183,7 +187,7 @@ public class SocketServerRfood
                     }
                     catch (ValueOutOfRange e)
                     {
-                        String[] row = new String[7];
+                        String[] row = new String[8];
 
                         row[0] = idMac;
                         row[1] = "N/A";
@@ -191,7 +195,8 @@ public class SocketServerRfood
                         row[3] = "N/A";
                         row[4] = "N/A";
                         row[5] = "N/A";
-                        row[6] = e.getMessage() + "from " + idMac;
+                        row[6] = "N/A";
+                        row[7] = e.getMessage() + "from " + idMac;
                         
                         Date date = Calendar.getInstance().getTime();  
                         ErrorLog el = new ErrorLog(date, 1, (e.getMessage() + "from " + idMac));
@@ -201,7 +206,7 @@ public class SocketServerRfood
                     }
                     catch (RecordNotFoundException e)
                     {
-                        String[] row = new String[7];
+                        String[] row = new String[8];
 
                         row[0] = idMac;
                         row[1] = "N/A";
@@ -209,7 +214,8 @@ public class SocketServerRfood
                         row[3] = "N/A";
                         row[4] = "N/A";
                         row[5] = "N/A";
-                        row[6] = e.getMessage() + "from " + idMac;
+                        row[6] = "N/A";
+                        row[7] = e.getMessage() + "from " + idMac;
                         
                         Date date = Calendar.getInstance().getTime();  
                         ErrorLog el = new ErrorLog(date, 2, (e.getMessage() + "from " + idMac));
@@ -219,7 +225,7 @@ public class SocketServerRfood
                     }
                     catch (JSONException e)
                     {
-                        String[] row = new String[7];
+                        String[] row = new String[8];
 
                         row[0] = idMac;
                         row[1] = "N/A";
@@ -227,7 +233,8 @@ public class SocketServerRfood
                         row[3] = "N/A";
                         row[4] = "N/A";
                         row[5] = "N/A";
-                        row[6] = e.getMessage() + "from " + idMac;
+                        row[6] = "N/A";
+                        row[7] = e.getMessage() + "from " + idMac;
                         
                         t.add(row);
                         

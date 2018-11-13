@@ -163,7 +163,7 @@ public class Device
         return true;
     }
     
-    public static ArrayList<Device> getAll()
+        public static ArrayList<Device> getAll()
     {
         //list
         ArrayList<Device> list = new ArrayList<Device>();
@@ -202,5 +202,165 @@ public class Device
         return list;
     }
     
-
+    public ArrayList<ReadingDogFood> getAllDog()
+    {
+               //list
+        ArrayList<ReadingDogFood> list = new ArrayList<ReadingDogFood>();
+        //connection
+        Connection connection = MySqlConnection.getConnection();
+        //query
+        String query = "SELECT d.idMac, d.description, d.ipAddress, d.totalLifeCans, dfh.idHistoryDog, dfh.date, dfh.date, dfh.time, dfh.weight, dfh.actualWeight\n" +
+                        "FROM devices as d\n" +
+                        "INNER JOIN dogfoodhistory as dfh ON dfh.idMac = d.idMac"
+                        + "WHERE d.idMac = ?";
+        try
+        {
+            //prepare statement
+            PreparedStatement command = connection.prepareStatement(query);
+            command.setString(1, this.id); // set value for parameter
+            // execute query
+            ResultSet result = command.executeQuery();
+            //read rows
+            while (result.next())
+            {
+                //read fields
+                int id = result.getInt("idHistoryDog");
+                String date = result.getString("date");
+                String hour = result.getString("time");
+                double value = result.getDouble("weight");                
+                double aValue = result.getDouble("actualWeight");
+                        
+                String idDevice = result.getString("idMac");
+                String description = result.getString("description");
+                String ipAddress = result.getString("ipAddress");
+                int totalLifeCans = result.getInt("totalLifeCans");
+                Device d = new Device(idDevice, description, ipAddress, totalLifeCans);
+                //add product to list
+                list.add(new ReadingDogFood(id, date, d, value, hour, aValue));
+            }
+            connection.close();
+        }
+        catch(SQLException ex)
+        {
+            System.out.println(ex.getClass().toString() + " : " + ex.getMessage());
+        }
+        catch(Exception ex)
+        {
+            System.out.println(ex.getClass().toString() + " : " + ex.getMessage());
+        }       
+        //return list
+        return list;
+    }
+    
+    public ArrayList<ReadingDogFood> getAllDog(Date date1)
+    {
+        //list
+        ArrayList<ReadingDogFood> list = new ArrayList<ReadingDogFood>();
+        //connection
+        Connection connection = MySqlConnection.getConnection();
+        //query
+        String query = "SELECT d.idMac, d.description, d.ipAddress, d.totalLifeCans, dfh.idHistoryDog, DATE_FORMAT(dfh.date, '%d/%m/%Y') as date, dfh.time, dfh.weight, dfh.actualWeight\n" +
+                        "FROM devices as d\n" +
+                        "INNER JOIN dogfoodhistory as dfh ON dfh.idMac = d.idMac\n"
+                        + "WHERE d.idMac = ? AND dfh.date = ?";
+        try
+        {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+ 
+            //to convert Date to String, use format method of SimpleDateFormat class.
+            String stringDate1 = dateFormat.format(date1);
+            //prepare statement
+            PreparedStatement command = connection.prepareStatement(query);
+            command.setString(1, this.id); // set value for parameter
+            command.setString(2, stringDate1);
+            // execute query
+            ResultSet result = command.executeQuery();
+            //read rows
+            while (result.next())
+            {
+                //read fields
+                int id = result.getInt("idHistoryDog");
+                String date = result.getString("date");
+                String hour = result.getString("time");
+                double value = result.getDouble("weight");
+                double aValue = result.getDouble("actualWeight");
+                        
+                String idDevice = result.getString("idMac");
+                String description = result.getString("description");
+                String ipAddress = result.getString("ipAddress");
+                int totalLifeCans = result.getInt("totalLifeCans");
+                Device d = new Device(idDevice, description, ipAddress, totalLifeCans);
+                //add product to list
+                list.add(new ReadingDogFood(id, date, d, value, hour, aValue));
+            }
+            connection.close();
+        }
+        catch(SQLException ex)
+        {
+            System.out.println(ex.getClass().toString() + " : " + ex.getMessage());
+        }
+        catch(Exception ex)
+        {
+            System.out.println(ex.getClass().toString() + " : " + ex.getMessage());
+        }       
+        //return list
+        return list;
+    }
+    
+    public ArrayList<ReadingDogFood> getAllDog(Date date1, Date date2)
+    {
+        //list
+        ArrayList<ReadingDogFood> list = new ArrayList<ReadingDogFood>();
+        //connection
+        Connection connection = MySqlConnection.getConnection();
+        //query
+        String query = "SELECT d.idMac, d.description, d.ipAddress, d.totalLifeCans, dfh.idHistoryDog, DATE_FORMAT(dfh.date, '%d/%m/%Y') as date, dfh.time, dfh.weight, dfh.actualWeight\n" +
+                        "FROM devices as d\n" +
+                        "INNER JOIN dogfoodhistory as dfh ON dfh.idMac = d.idMac\n"
+                        + "WHERE d.idMac = ? AND dfh.date BETWEEN ? AND ?";
+        try
+        {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+ 
+            //to convert Date to String, use format method of SimpleDateFormat class.
+            String stringDate1 = dateFormat.format(date1);
+            String stringDate2 = dateFormat.format(date2);
+            //prepare statement
+            PreparedStatement command = connection.prepareStatement(query);
+            command.setString(1, this.id); // set value for parameter
+            command.setString(2, stringDate1); 
+            command.setString(3, stringDate2); 
+            // execute query
+            ResultSet result = command.executeQuery();
+            //read rows
+            while (result.next())
+            {
+                //read fields
+                int id = result.getInt("idHistoryDog");
+                String date = result.getString("date");
+                String hour = result.getString("time");
+                double value = result.getDouble("weight");
+                double aValue = result.getDouble("actualWeight");
+                        
+                String idDevice = result.getString("idMac");
+                String description = result.getString("description");
+                String ipAddress = result.getString("ipAddress");
+                int totalLifeCans = result.getInt("totalLifeCans");
+                Device d = new Device(idDevice, description, ipAddress, totalLifeCans);
+                //add product to list
+                list.add(new ReadingDogFood(id, date, d, value, hour, aValue));
+            }
+            connection.close();
+        }
+        catch(SQLException ex)
+        {
+            System.out.println(ex.getClass().toString() + " : " + ex.getMessage());
+        }
+        catch(Exception ex)
+        {
+            System.out.println(ex.getClass().toString() + " : " + ex.getMessage());
+        }       
+        //return list
+        return list;
+    }
 }

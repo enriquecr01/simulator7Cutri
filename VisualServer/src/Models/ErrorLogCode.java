@@ -17,17 +17,16 @@ public enum ErrorLogCode
     }
 
     static {
-        for (ErrorLogCode errorLogCode : ErrorLogCode.values()) {
-            map.put(errorLogCode.value, errorLogCode);
+        for (ErrorLogCode pageType : ErrorLogCode.values()) {
+            map.put(pageType.value, pageType);
         }
     }
 
-    public static ErrorLogCode valueOf(int errorLogCode) {
-        return (ErrorLogCode) map.get(errorLogCode);
+    public static ErrorLogCode valueOf(int pageType) {
+        return (ErrorLogCode) map.get(pageType);
     }
 
     public int getValue() {
         return value;
     }
-    
 }

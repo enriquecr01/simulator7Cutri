@@ -28,7 +28,7 @@ import javax.swing.table.TableRowSorter;
 public class ContainerVisual 
 {
     // titulos
-    private final static String nombresDeColumna[] = { "MAC Device", "Description device", "Date", "Time", "Quantity" };
+    private final static String nombresDeColumna[] = { "MAC Device", "Description device", "Date", "Time", "Actual Quantity", "Quantity" };
     
     JFrame frame = new JFrame("Container");
     
@@ -73,7 +73,7 @@ public class ContainerVisual
         
         modelo = new DefaultTableModel(null, nombresDeColumna); 
         
-        String[] fila = new String[5];
+        String[] fila = new String[6];
 
         for (ContainerCans cc : containerReading) 
         {
@@ -84,7 +84,8 @@ public class ContainerVisual
             fila[1] = cc.getDevice().getDescription();
             fila[2] = stringDate;
             fila[3] = cc.getTime();
-            fila[4] = Double.toString(cc.getValue());
+            fila[4] = Double.toString(cc.getCantidadActual());
+            fila[5] = Double.toString(cc.getValue());
 
             modelo.addRow(fila);
         }
@@ -112,6 +113,7 @@ public class ContainerVisual
         c.gridy = 0; c.gridx = 1; panelControls.add(textFirstDate , c);
         c.gridy = 1; c.gridx = 0; panelControls.add(labelLastDate , c) ;
         c.gridy = 1; c.gridx = 0; panelControls.add(textLastDate , c) ;
+        c.gridy = 2; c.gridx = 0; panelControls.add(devicesList , c) ;        
         c.gridy = 2; c.gridx = 0; panelControls.add(devicesList , c) ;
 
         //ADD THE PANLE TO THE CONTAINER
@@ -190,6 +192,7 @@ public class ContainerVisual
             fila[2] = stringDate;
             fila[3] = cc.getTime();
             fila[4] = Double.toString(cc.getValue());
+            fila[5] = Double.toString(cc.getCantidadActual());
 
             modelo.addRow(fila);
         }

@@ -10,6 +10,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class ReadingDogFood 
@@ -19,6 +20,7 @@ public class ReadingDogFood
     private String time;
     private Device device;
     private double value;
+    private double actualValue;
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
@@ -42,6 +44,9 @@ public class ReadingDogFood
 
     public double getValue() { return value; }
     public void setValue(double value) { this.value = value; }
+    
+    public double getActualValue() { return actualValue; }
+    public void setActualValue(double value) { this.actualValue = value; }
 
     public ReadingDogFood() 
     {
@@ -50,9 +55,10 @@ public class ReadingDogFood
         this.time = "";
         this.device = new Device();
         this.value = 0;
+        this.actualValue = 0;
     }
     
-    public ReadingDogFood(int id, String date, Device device, double value, String time) 
+    public ReadingDogFood(int id, String date, Device device, double value, String time, double actualValue) 
     {
         this.id = id;
         try { this.date = this.date = new SimpleDateFormat("yyyy-MM-dd").parse(date);}
@@ -60,15 +66,17 @@ public class ReadingDogFood
         this.time = time;
         this.device = device;
         this.value = value;
+        this.actualValue = actualValue;
     }
     
-    public ReadingDogFood(String date, Device device, double value, String time) throws ValueOutOfRange 
+    public ReadingDogFood(String date, Device device, double value, String time, double actualValue) throws ValueOutOfRange 
     {
         this.id = 0;
         try { this.date = this.date = new SimpleDateFormat("yyyy-MM-dd").parse(date);}
         catch(ParseException e) { }
         this.time = time;
         this.device = device;
+        this.actualValue = actualValue;
         if(value < 12000)
         {
             this.value = value;
@@ -82,18 +90,19 @@ public class ReadingDogFood
         //connection
         Connection connection = MySqlConnection.getConnection();
         //query
-        String query = "INSERT INTO dogfoodhistory (idMac, date, time, weight) VALUES (?, ?, ?, ?);";
+        String query = "INSERT INTO dogfoodhistory (idMac, date, time, weight, actualWeight) VALUES (?, ?, ?, ?, ?);";
         try
         {
             //prepare statement
             PreparedStatement command = connection.prepareStatement(query);
-            String dateString = this.date.toString();
-            System.out.println(dateString);
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  
+            String strDate = dateFormat.format(date); 
             
             command.setString(1, this.device.getId()); // set value for parameter
-            command.setString(2, dateString);
+            command.setString(2, strDate);
             command.setString(3, this.time);
-            command.setDouble(4, this.value);
+            command.setDouble(4, this.actualValue);
+            command.setDouble(5, this.value);
             // execute query
             int result = command.executeUpdate();
             //check if record was found
@@ -128,7 +137,7 @@ public class ReadingDogFood
         //connection
         Connection connection = MySqlConnection.getConnection();
         //query
-        String query = "SELECT d.idMac, d.description, d.ipAddress, d.totalLifeCans, dfh.idHistoryDog, dfh.date, dfh.time, dfh.weight\n" +
+        String query = "SELECT d.idMac, d.description, d.ipAddress, d.totalLifeCans, dfh.idHistoryDog, dfh.date, dfh.time, dfh.weight, dfh.actualWeight\n" +
                         "FROM devices as d\n" +
                         "INNER JOIN dogfoodhistory as dfh ON dfh.idMac = d.idMac\n"+
                         "ORDER BY dfh.idHistoryDog desc";
@@ -146,6 +155,7 @@ public class ReadingDogFood
                 String date = result.getString("date");
                 String hour = result.getString("time");
                 double value = result.getDouble("weight");
+                double actualValue = result.getDouble("actualWeight");
                         
                 String idDevice = result.getString("idMac");
                 String description = result.getString("description");
@@ -153,7 +163,7 @@ public class ReadingDogFood
                 int totalLifeCans = result.getInt("totalLifeCans");
                 Device d = new Device(idDevice, description, ipAddress, totalLifeCans);
                 //add product to list
-                list.add(new ReadingDogFood(id, date, d, value, hour));
+                list.add(new ReadingDogFood(id, date, d, value, hour, actualValue));
             }
             connection.close();
         }
@@ -177,7 +187,7 @@ public class ReadingDogFood
         //connection
         Connection connection = MySqlConnection.getConnection();
         //query
-        String query = "SELECT d.idMac, d.description, d.ipAddress, d.totalLifeCans, dfh.idHistoryDog, dfh.date, dfh.time, dfh.weight\n" +
+        String query = "SELECT d.idMac, d.description, d.ipAddress, d.totalLifeCans, dfh.idHistoryDog, dfh.date, dfh.time, dfh.weight, dfh.actualWeight\n" +
                         "FROM devices as d\n" +
                         "INNER JOIN dogfoodhistory as dfh ON dfh.idMac = d.idMac" +
                         "WHERE d.idMac = ?\n" +
@@ -198,6 +208,7 @@ public class ReadingDogFood
                 String date = result.getString("date");
                 String hour = result.getString("time");
                 double value = result.getInt("weight");
+                double actualValue = result.getDouble("actualWeight");
                         
                 String idDevice = result.getString("idMac");
                 String description = result.getString("description");
@@ -205,7 +216,7 @@ public class ReadingDogFood
                 int totalLifeCans = result.getInt("totalLifeCans");
                 Device d = new Device(idDevice, description, ipAddress, totalLifeCans);
                 //add product to list
-                list.add(new ReadingDogFood(id, date, d, value, hour));
+                list.add(new ReadingDogFood(id, date, d, value, hour, actualValue));
             }
             connection.close();
         }
@@ -228,7 +239,7 @@ public class ReadingDogFood
         //connection
         Connection connection = MySqlConnection.getConnection();
         //query
-        String query = "SELECT d.idMac, d.description, d.ipAddress, d.totalLifeCans, dfh.idHistoryDog, dfh.date, dfh.time, dfh.weight\n" +
+        String query = "SELECT d.idMac, d.description, d.ipAddress, d.totalLifeCans, dfh.idHistoryDog, dfh.date, dfh.time, dfh.weight, dfh.actualWeight\n" +
                         "FROM devices as d\n" +
                         "INNER JOIN dogfoodhistory as dfh ON dfh.idMac = d.idMac" +
                         "WHERE dfh.date BETWEEN ? AND ?\n"+
@@ -255,6 +266,7 @@ public class ReadingDogFood
                 String date = result.getString("date");
                 String hour = result.getString("time");
                 double value = result.getInt("weight");
+                double actualValue = result.getDouble("actualWeight");
                         
                 String idDevice = result.getString("idMac");
                 String description = result.getString("description");
@@ -262,7 +274,7 @@ public class ReadingDogFood
                 int totalLifeCans = result.getInt("totalLifeCans");
                 Device d = new Device(idDevice, description, ipAddress, totalLifeCans);
                 //add product to list
-                list.add(new ReadingDogFood(id, date, d, value, hour));
+                list.add(new ReadingDogFood(id, date, d, value, hour, actualValue));
             }
             connection.close();
         }
@@ -285,7 +297,7 @@ public class ReadingDogFood
         //connection
         Connection connection = MySqlConnection.getConnection();
         //query
-        String query = "SELECT d.idMac, d.description, d.ipAddress, d.totalLifeCans, dfh.idHistoryDog, dfh.date, dfh.time, dfh.weight\n" +
+        String query = "SELECT d.idMac, d.description, d.ipAddress, d.totalLifeCans, dfh.idHistoryDog, dfh.date, dfh.time, dfh.weight, dfh.actualWeight\n" +
                         "FROM devices as d\n" +
                         "INNER JOIN dogfoodhistory as dfh ON dfh.idMac = d.idMac" +
                         "WHERE d.idMac = ? AND dfh.date BETWEEN ? AND ?\n"+
@@ -313,6 +325,7 @@ public class ReadingDogFood
                 String date = result.getString("date");
                 String hour = result.getString("time");
                 double value = result.getInt("weight");
+                double actualValue = result.getDouble("actualWeight");
                         
                 String idDevice = result.getString("idMac");
                 String description = result.getString("description");
@@ -320,7 +333,7 @@ public class ReadingDogFood
                 int totalLifeCans = result.getInt("totalLifeCans");
                 Device d = new Device(idDevice, description, ipAddress, totalLifeCans);
                 //add product to list
-                list.add(new ReadingDogFood(id, date, d, value, hour));
+                list.add(new ReadingDogFood(id, date, d, value, hour, actualValue));
             }
             connection.close();
         }

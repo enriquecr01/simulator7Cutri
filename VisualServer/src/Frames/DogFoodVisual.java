@@ -30,7 +30,7 @@ import javax.swing.table.TableRowSorter;
 public class DogFoodVisual 
 {
         // titulos
-    private final static String nombresDeColumna[] = { "MAC Device", "Description device", "Date", "Time", "Weight" };
+    private final static String nombresDeColumna[] = { "MAC Device", "Description device", "Date", "Time", "Actual Weight", "Weight" };
     
     JFrame frame = new JFrame("Dog Food History");
     
@@ -75,7 +75,7 @@ public class DogFoodVisual
         
         modelo = new DefaultTableModel(null, nombresDeColumna); 
         
-        String[] fila = new String[5];
+        String[] fila = new String[6];
 
         for (ReadingDogFood dfh : containerReading) 
         {
@@ -86,7 +86,8 @@ public class DogFoodVisual
             fila[1] = dfh.getDevice().getDescription();
             fila[2] = stringDate;
             fila[3] = dfh.getTime();
-            fila[4] = Double.toString(dfh.getValue());
+            fila[4] = Double.toString(dfh.getActualValue());
+            fila[5] = Double.toString(dfh.getValue());
 
             modelo.addRow(fila);
         }
@@ -180,7 +181,7 @@ public class DogFoodVisual
 
         for (int i = 0; i < sizeModel ; i ++) { modelo.removeRow(0); }
 
-        String[] fila = new String[5];
+        String[] fila = new String[6];
 
         for (ReadingDogFood dfh : dogReadings) 
         {
@@ -191,7 +192,8 @@ public class DogFoodVisual
             fila[1] = dfh.getDevice().getDescription();
             fila[2] = stringDate;
             fila[3] = dfh.getTime();
-            fila[4] = Double.toString(dfh.getValue());
+            fila[4] = Double.toString(dfh.getActualValue());
+            fila[5] = Double.toString(dfh.getValue());
 
             modelo.addRow(fila);
         }
