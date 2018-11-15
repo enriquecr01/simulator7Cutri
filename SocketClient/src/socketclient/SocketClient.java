@@ -52,7 +52,7 @@ public class SocketClient
                 String horaS = date1 + "" + date2 + "." + date3 + date4;
                 double horaD = Double.parseDouble(horaS);
                 System.out.println(horaD);
-                if(horaD >= 10.00 && horaD <= 20.00)
+                if(horaD >= 10.00 && horaD <= 17.30)
                 {
                     System.out.println("Esta Abierto");
                     int latas = 4 + r.nextInt(4);
@@ -155,10 +155,24 @@ public class SocketClient
                       //Thread.sleep(latas * 60 * 1000); 
                       System.out.println("Hoy es : " + strDays[now.get(Calendar.DAY_OF_WEEK) - 1]);
                       if(strDays[now.get(Calendar.DAY_OF_WEEK) - 1].equals("Sabado") || strDays[now.get(Calendar.DAY_OF_WEEK) - 1].equals("Domingo"))
-                        Thread.sleep((latas * 60 * 1000)/2); 
-                      else
+                      {
+                          System.out.println("Dormire hoy es sabado o domingo " + ((latas * 60 * 1000)/2) );
+                          Thread.sleep(((latas * 60 * 1000)/2)); 
+                      }
+                        
+                      else if(horaD >= 12.00 && horaD <= 15.00)
+                      {
+                          System.out.println("Dormire entre las 12 y las 3 " + ((latas * 60 * 1000)/2) );
+                          Thread.sleep(((latas * 60 * 1000)/2)); 
+                      }
+                          
                           //Thread.sleep((latas * 60 * 1000));
-                          Thread.sleep((10000)); 
+                      else
+                      {
+                          System.out.println("Dormire normal " + (latas * 60 * 1000) );
+                          Thread.sleep((latas * 60 * 1000)); 
+                      }
+                          
                         //el tiempo que tardara en que vuelvan a hecharle latas, va ser igual al numero de latas en minutos
                     } catch(InterruptedException e) {
                       System.out.println(e.getMessage());
