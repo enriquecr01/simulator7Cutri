@@ -141,7 +141,6 @@ public class ContainerVisual
                 {
                     selectMacWithDates();
                 }
-                
             }
         });
         
@@ -180,7 +179,7 @@ public class ContainerVisual
 
         for (int i = 0; i < sizeModel ; i ++) { modelo.removeRow(0); }
 
-        String[] fila = new String[5];
+        String[] fila = new String[6];
 
         for (ContainerCans cc : conainerReadings) 
         {

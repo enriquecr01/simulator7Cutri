@@ -40,8 +40,10 @@ public class MenuVisual
         c.gridy = 0; c.gridx = 1; panelButtons.add(buttonContainer , c);
         c.gridy = 1; c.gridx = 2; panelButtons.add(buttonDuck , c) ;
         c.gridy = 1; c.gridx = 2; panelButtons.add(buttonDog , c) ;
-        c.gridy = 2; c.gridx = 0; panelButtons.add(buttonExit , c) ;
         c.gridy = 1; c.gridx = 3; panelButtons.add(buttonDevice , c) ;
+        c.gridy = 1; c.gridx = 4; panelButtons.add(buttonDevice , c) ;
+        c.gridy = 2; c.gridx = 0; panelButtons.add(buttonExit , c) ;
+       
 
         //ADD THE PANLE TO THE CONTAINER
         container.add(panelButtons, BorderLayout.CENTER);

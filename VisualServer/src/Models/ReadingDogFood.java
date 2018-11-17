@@ -189,7 +189,7 @@ public class ReadingDogFood
         //query
         String query = "SELECT d.idMac, d.description, d.ipAddress, d.totalLifeCans, dfh.idHistoryDog, dfh.date, dfh.time, dfh.weight, dfh.actualWeight\n" +
                         "FROM devices as d\n" +
-                        "INNER JOIN dogfoodhistory as dfh ON dfh.idMac = d.idMac" +
+                        "INNER JOIN dogfoodhistory as dfh ON dfh.idMac = d.idMac\n" +
                         "WHERE d.idMac = ?\n" +
                         "ORDER BY dfh.idHistoryDog desc";
         try

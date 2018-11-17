@@ -199,7 +199,7 @@ public class DevicesVisual
         // añadimos la tabla
         frame.add(scrollPane);
         // tamaño
-        frame.setSize(900, 300);
+        frame.setSize(1100, 300);
         // mostramos
         frame.setVisible(true);
     }

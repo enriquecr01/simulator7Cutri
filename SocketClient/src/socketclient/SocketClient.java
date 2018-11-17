@@ -11,12 +11,14 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import Frames.ClientVisual;
 
 public class SocketClient 
 {
     public static void main(String[] args) 
     {
        // declare objects
+        ClientVisual cv = new ClientVisual();
         Socket s; 
         PrintStream ps;
         InputStreamReader isr;
@@ -52,7 +54,7 @@ public class SocketClient
                 String horaS = date1 + "" + date2 + "." + date3 + date4;
                 double horaD = Double.parseDouble(horaS);
                 System.out.println(horaD);
-                if(horaD >= 10.00 && horaD <= 17.30)
+                if(horaD >= 10.00 && horaD <= 20.30)
                 {
                     System.out.println("Esta Abierto");
                     int latas = 4 + r.nextInt(4);
@@ -119,11 +121,14 @@ public class SocketClient
                                 break;
                             }
                     }
-                    if (disp == 1){
+                    if (disp == 1)
+                    {
                         dispensadorDog = dispensador;
+                        cv.setDispensadorDog(dispensadorDog);
                     }
                     else{
                         dispensadorDuck = dispensador;
+                        cv.setDispensadorDuck(dispensadorDuck);
                     }
                     System.out.println("El numero de latas es: " + latas);
                     System.out.println("Dispensando... " + dispensar + " gramos");                    
@@ -171,6 +176,7 @@ public class SocketClient
                       {
                           System.out.println("Dormire normal " + (latas * 60 * 1000) );
                           Thread.sleep((latas * 60 * 1000)); 
+                          //Thread.sleep(1000); 
                       }
                           
                         //el tiempo que tardara en que vuelvan a hecharle latas, va ser igual al numero de latas en minutos
